@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+@mixin dFlex($dFlex : flex, $jc: center, $ai : center ){
+    display: $dFlex;
+    justify-content: $jc;
+    align-items: $ai;
+}
+
+
+body{
+    margin: 0
+}
