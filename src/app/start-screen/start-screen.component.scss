@@ -28,18 +28,24 @@
 
 #start-btn{
     width: 300px;
-    height: 100px;
+    height: 200px;
     position: absolute;
-    bottom: 20vh;
-    left: 50vw;
-    right: 50vw;
+    @include dFlex();
+    bottom: 0;
+    right: 0;
     font-size: 40px;
     border: none;
-    border-radius: 8px;
+    border-top-left-radius: 100%;
     font-family: 'Permanent Marker';
     color: white;
     background-image: url('../../assets/img/btnFire.jpg');
     background-size: cover;
     background-position: bottom;
     cursor: pointer;
+    transition: transform 1s ease;
+
+    &:hover{
+        transform: scale(1.1);
+        
+    }
 }
