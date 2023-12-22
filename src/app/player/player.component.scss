@@ -1,0 +1,21 @@
+.player{
+    display: flex;
+    align-items: center;
+    width: 300px;
+    
+    
+
+    >span{
+        font-size: 40px;
+        margin-left: 16px;
+        font-family: 'Permanent Marker';
+        color: white;
+    }
+    >img{
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 100%;
+        background: none;
+    }
+}
