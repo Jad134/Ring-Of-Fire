@@ -12,10 +12,16 @@
         color: white;
     }
     >img{
-        width: 100px;
-        height: 100px;
+        width: 70px;
+        height: 70px;
         object-fit: cover;
         border-radius: 100%;
         background: none;
     }
+}
+
+.player-active{
+    background-color: orange;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
 }
