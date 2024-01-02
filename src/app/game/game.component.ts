@@ -35,7 +35,7 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.pickCardAnimation) {
+    if (!this.pickCardAnimation && this.game.players.length > 0) {
 
 
       this.currentCard = this.game.stack.pop() ?? '';
@@ -57,8 +57,9 @@ export class GameComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(name => {
-      this.game.players.push(name);
-
+      if(name && name.length > 0) {
+        this.game.players.push(name);
+      }
     });
   }
 }

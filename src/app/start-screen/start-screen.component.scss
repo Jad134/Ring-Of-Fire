@@ -11,6 +11,7 @@
     @include dFlex($ai: start, $jc: start);
 
     >h1 {
+        margin: 0;
         font-size: 100px;
         color: white;
         font-family: 'Permanent Marker';
