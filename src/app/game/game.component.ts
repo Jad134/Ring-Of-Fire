@@ -8,7 +8,7 @@ import { MatDialog, } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { FormsModule } from '@angular/forms';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, collection, doc, collectionData, onSnapshot, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, collectionData, onSnapshot, addDoc, updateDoc,getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Console, log } from 'console';
 import { ActivatedRoute } from '@angular/router';
@@ -31,7 +31,8 @@ export class GameComponent implements OnInit {
   items$: any;
   items: any;
   unsubList: any;
-  unSubSingle:any;
+  unSubSingle: any;
+  currentId: any;
 
 
 
@@ -60,11 +61,12 @@ export class GameComponent implements OnInit {
     this.newGame();
     this.route.params.subscribe(params => {
       const gameId = params['id'];
-      console.log(gameId);
+      this.currentId = gameId
+      console.log(this.currentId);
 
       // Verwenden Sie die ID, um Firestore-Abfragen durchzuführen
       this.unSubSingle = onSnapshot(this.getSingleDocRef("games", gameId), (currentGame) => {
-        console.log('update',currentGame.data());
+        console.log('update', currentGame.data());
         const gameData = currentGame.data()!;
         this.game.currentPlayer = gameData['currentplayer'];
         this.game.playedCards = gameData['playedCards'];
@@ -89,19 +91,34 @@ export class GameComponent implements OnInit {
     return doc(collection(this.firestore, colId), docId)
   }
 
+  async saveGame() {
+    try {
+      const gameRef = this.getSingleDocRef("games", this.currentId);
+  
+      // Rufen Sie die aktuellen Spielinformationen aus der Datenbank ab
+      const docSnapshot = await getDoc(gameRef);
+      
+      if (docSnapshot.exists()) {
+        const currentGame = docSnapshot.data();
+  
+        // Führen Sie die erforderlichen Aktualisierungen durch
+        currentGame['currentplayer'] = this.game.currentPlayer;
+        currentGame['playedCards'] = this.game.playedCards;
+        currentGame['players'] = this.game.players;
+        currentGame['stack'] = this.game.stack;
+  
+        // Aktualisieren Sie die Daten in der Datenbank
+        await updateDoc(gameRef, currentGame);
+        console.log(this.currentId, 'Game saved');
+      }
+    } catch (error) {
+      console.error('Error saving game:', error);
+    }
+  }
+
   async newGame() {
 
     this.game = new Game();
-
-    //-----------------------------Aktivieren für das hochladen von neuen spielen------------------------
-    // await addDoc(this.getGameRef(),this.game.toJson()).catch(
-    //   (err) => {console.error(err)}
-    // ).then(
-    //   (docRef) => {console.log('Document written with ID:', docRef?.id);}
-    // )
-    // console.log(this.game);
-
-
   }
 
   takeCard() {
@@ -111,13 +128,14 @@ export class GameComponent implements OnInit {
       this.currentCard = this.game.stack.pop() ?? '';
       console.log(this.currentCard)
       this.pickCardAnimation = true;
-
+      this.saveGame()
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
         this.pickCardAnimation = false
+        this.saveGame()
       }, 1000);
     }
   }
@@ -129,8 +147,10 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe(name => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.saveGame()
       }
     });
+    
   }
 }
 
