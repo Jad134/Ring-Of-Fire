@@ -1,0 +1,31 @@
+.player{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content ;
+    padding-inline: 8px;
+   
+    
+    
+    
+
+    >span{
+        font-size: 16px;
+
+        font-family: 'Permanent Marker';
+        color: white;
+    }
+    >img{
+        width: 35px;
+        height: 35px;
+        object-fit: cover;
+        border-radius: 100%;
+        background: none;
+    }
+}
+
+.player-active{
+    background-color: orange;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+}

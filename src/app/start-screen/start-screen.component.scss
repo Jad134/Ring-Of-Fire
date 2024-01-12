@@ -17,17 +17,18 @@
         font-family: 'Permanent Marker';
 
         >span {
-            &:nth-child(2){
-               padding-left: 126px;
+            &:nth-child(2) {
+                padding-left: 126px;
             }
-            &:nth-child(4){
+
+            &:nth-child(4) {
                 padding-left: 200px;
-            } 
+            }
         }
     }
 }
 
-#start-btn{
+#start-btn {
     width: 300px;
     height: 200px;
     position: absolute;
@@ -45,8 +46,102 @@
     cursor: pointer;
     transition: transform 1s ease;
 
-    &:hover{
+    &:hover {
         transform: scale(1.1);
-        
+
+    }
+}
+
+@media(max-width: 450px) {
+    .start-screen {
+        >h1 {
+            font-size: 70px;
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    .start-screen {
+        >h1 {
+            font-size: 50px;
+
+            >span {
+                &:nth-child(2) {
+                    padding-left: 80px;
+                }
+
+                &:nth-child(4) {
+                    padding-left: 100px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 350px) {
+
+    #start-btn {
+        width: 186px;
+        height: 100px;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 0;
+        right: 20%; 
+        top: 70%;
+        border-top-left-radius: 0;
+        border-radius: 24px;
+        font-size: 32px;
+        border: none;
+        font-family: "Permanent Marker";
+        color: white;
+   
+        background-size: cover;
+        background-position: bottom;
+        cursor: pointer;
+        transition: transform 1s ease;
+    
+
+        &:hover {
+            transform: scale(1.1);
+
+        }
+    }
+}
+
+@media(max-height: 532px) {
+    .start-screen {
+        >h1 {
+            font-size: 70px;
+
+            >span {
+                &:nth-child(2) {
+                    padding-left: 60px;
+                }
+
+                &:nth-child(4) {
+                    padding-left: 70px;
+                }
+            }
+        }
+    }
+}
+
+@media(max-height: 400px) {
+    .start-screen {
+        >h1 {
+            font-size: 60px;
+
+            >span {
+                &:nth-child(2) {
+                    padding-left: 55px;
+                }
+
+                &:nth-child(4) {
+                    padding-left: 60px;
+                }
+            }
+        }
     }
 }

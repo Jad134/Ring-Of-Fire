@@ -12,6 +12,9 @@ import { Firestore, collection, doc, collectionData, onSnapshot, addDoc, updateD
 import { Observable } from 'rxjs';
 import { Console, log } from 'console';
 import { ActivatedRoute } from '@angular/router';
+import { PlayerMobileComponent } from '../player-mobile/player-mobile.component';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
+
 
 
 
@@ -19,14 +22,13 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-game',
   standalone: true,
-  imports: [CommonModule, PlayerComponent, MatButtonModule, MatIconModule, FormsModule, GameInfoComponent],
+  imports: [CommonModule, PlayerComponent, MatButtonModule, MatIconModule, FormsModule, GameInfoComponent, PlayerMobileComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss'
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
+  
   game: Game = new Game();
-  currentCard: string = '';
   firestore: Firestore = inject(Firestore);
   items$: any;
   items: any;
@@ -69,9 +71,12 @@ export class GameComponent implements OnInit {
         console.log('update', currentGame.data());
         const gameData = currentGame.data()!;
         this.game.currentPlayer = gameData['currentplayer'];
+        this.game.player_images = gameData['player_images']
         this.game.playedCards = gameData['playedCards'];
         this.game.players = gameData['players'];
         this.game.stack = gameData['stack'];
+        this.game.pickCardAnimation = gameData['pickCardAnimation'];
+        this.game.currentCard = gameData['currentCard'];
       });
     })
 
@@ -81,6 +86,20 @@ export class GameComponent implements OnInit {
     if (this.unSubSingle) {
       this.unSubSingle();
     }
+  }
+
+  editPlayer(playerId : number){
+    console.log('edit player', playerId );
+
+    const dialogRef = this.dialog.open(EditPlayerComponent);
+
+    dialogRef.afterClosed().subscribe(change => {
+      console.log('recived change', change)
+      this.game.player_images[playerId] = change;
+      this.saveGame();
+    });
+      
+    
   }
 
   getGameRef() {
@@ -103,9 +122,12 @@ export class GameComponent implements OnInit {
   
         // Führen Sie die erforderlichen Aktualisierungen durch
         currentGame['currentplayer'] = this.game.currentPlayer;
+        currentGame['player_images'] = this.game.player_images
         currentGame['playedCards'] = this.game.playedCards;
         currentGame['players'] = this.game.players;
         currentGame['stack'] = this.game.stack;
+        currentGame['pickCardAnimation'] = this.game.pickCardAnimation;
+        currentGame['currentCard'] = this.game.currentCard;
   
         // Aktualisieren Sie die Daten in der Datenbank
         await updateDoc(gameRef, currentGame);
@@ -122,19 +144,19 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.pickCardAnimation && this.game.players.length > 0) {
+    if (!this.game.pickCardAnimation && this.game.players.length > 0) {
 
 
-      this.currentCard = this.game.stack.pop() ?? '';
-      console.log(this.currentCard)
-      this.pickCardAnimation = true;
+      this.game.currentCard = this.game.stack.pop() ?? '';
+      console.log(this.game.currentCard)
+      this.game.pickCardAnimation = true;
       this.saveGame()
 
       this.game.currentPlayer++;
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
-        this.pickCardAnimation = false
+        this.game.playedCards.push(this.game.currentCard);
+        this.game.pickCardAnimation = false
         this.saveGame()
       }, 1000);
     }
@@ -147,6 +169,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe(name => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.player_images.push('affe.png')
         this.saveGame()
       }
     });

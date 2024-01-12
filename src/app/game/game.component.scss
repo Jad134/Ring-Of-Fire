@@ -16,6 +16,12 @@
         width: 120px;
 
     }
+
+    @media (max-height: 620px) {
+        >img {
+            width: 80px;
+        }
+    }
 }
 
 .top-card {
@@ -28,44 +34,91 @@
 }
 
 .pick-card {
-    animation: pick-card-animation 1s ease-in-out ;
-    transform: scale(1.1) translateX(130px) translateY(-180px)  rotate(-20deg) ;
+    animation: pick-card-animation 1s ease-in-out;
+    transform: scale(1.1) translateX(130px) translateY(-180px) rotate(-20deg);
 }
 
-.played-card{
+.played-card {
     right: 25px;
-    transform: scale(1.1) translateX(130px) translateY(-180px)  rotate(-20deg) ;
+    transform: scale(1.1) translateX(130px) translateY(-180px) rotate(-20deg);
 }
 
-@keyframes pick-card-animation{
-    0%{
-        transform: scale(1) ;
+@keyframes pick-card-animation {
+    0% {
+        transform: scale(1);
     }
-    40%{
-        transform: scale(1.7) ;
+
+    40% {
+        transform: scale(1.7);
     }
-    60%{
-        transform: scale(1.7) ;
+
+    60% {
+        transform: scale(1.7);
     }
-    100%{
-        transform: scale(1.1) translateX(130px) translateY(-180px) rotate(-20deg) ;
+
+    100% {
+        transform: scale(1.1) translateX(130px) translateY(-180px) rotate(-20deg);
     }
 }
 
-.player-position{
+.player-position {
     position: absolute;
     right: 0;
+    z-index: 1;
 }
 
-.button-add{
+.button-add {
     position: absolute;
     right: 32px;
     bottom: 32px;
+    z-index: 2;
+
+    @media (max-width:960px) {
+        bottom: 7px;
+        width: 48px;
+        height: 48px;
+    }
 }
 
-.info{
+.info {
     position: absolute;
     bottom: 32px;
     left: 100px;
     right: 100px;
+
+    @media (max-width:960px) {
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+    }
+
+}
+
+.scroll-container {
+    position: absolute;
+    display: flex;
+    left: 0;
+    right: 0;
+    top: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+
+    @media (min-width:720px) {
+        overflow-x: hidden;
+    }
+
+    app-player-mobile {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+}
+
+app-player,
+app-player-mobile {
+    cursor: pointer;
+
+    &:hover{
+        filter: brightness(1.1);
+    }
 }
