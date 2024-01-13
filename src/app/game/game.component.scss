@@ -122,3 +122,15 @@ app-player-mobile {
         filter: brightness(1.1);
     }
 }
+
+.gameOver{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    >img{
+        z-index: 5;
+        width: 100vw;
+        height: 100vh;
+    }
+}

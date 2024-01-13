@@ -1,4 +1,5 @@
-<app-player (click)="editPlayer(i)" *ngFor="let player of game.players;  let i = index;" [ngStyle]="{'top.px': 130 + (i * 90)} "
+
+<app-player (click)="editPlayer(i)" *ngFor="let player of game.players;  let i = index;" [ngStyle]="{'top.px': 20 + (i * 60)} "
     [playerActive]=" i == game.currentPlayer" [image]="game.player_images[i]" [name]="player" class="player-position hide-mobile"></app-player>
 
 
@@ -9,8 +10,11 @@
 </div>
 
 
+<div class="gameOver" *ngIf="gameOver">
+    <img src="assets/img/game_over.jpg" alt="">
+</div>
 
-<div class="game-field">
+<div *ngIf="!gameOver"  class="game-field">
     <div class="card-stack">
         <!-- Card stack-->
         <img *ngFor="let c of [0,1,2,3]; let i = index;" [ngStyle]="{'right.px': i * 5} "

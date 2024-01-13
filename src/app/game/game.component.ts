@@ -8,7 +8,7 @@ import { MatDialog, } from '@angular/material/dialog';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { FormsModule } from '@angular/forms';
 import { GameInfoComponent } from '../game-info/game-info.component';
-import { Firestore, collection, doc, collectionData, onSnapshot, addDoc, updateDoc,getDoc } from '@angular/fire/firestore';
+import { Firestore, collection, doc, collectionData, onSnapshot, addDoc, updateDoc, getDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Console, log } from 'console';
 import { ActivatedRoute } from '@angular/router';
@@ -27,11 +27,12 @@ import { EditPlayerComponent } from '../edit-player/edit-player.component';
   styleUrl: './game.component.scss'
 })
 export class GameComponent implements OnInit {
-  
+
   game: Game = new Game();
   firestore: Firestore = inject(Firestore);
   items$: any;
   items: any;
+  gameOver = false;
   unsubList: any;
   unSubSingle: any;
   currentId: any;
@@ -88,18 +89,27 @@ export class GameComponent implements OnInit {
     }
   }
 
-  editPlayer(playerId : number){
-    console.log('edit player', playerId );
+  editPlayer(playerId: number) {
+    console.log('edit player', playerId);
 
     const dialogRef = this.dialog.open(EditPlayerComponent);
 
     dialogRef.afterClosed().subscribe(change => {
-      console.log('recived change', change)
-      this.game.player_images[playerId] = change;
-      this.saveGame();
+      if (change) {
+        if (change == 'delete') {
+          this.game.players.splice(playerId, 1)
+          this.game.player_images.splice(playerId, 1)
+        } else {
+          console.log('recived change', change)
+          this.game.player_images[playerId] = change;
+
+        }
+        this.saveGame();
+      }
+
     });
-      
-    
+
+
   }
 
   getGameRef() {
@@ -113,13 +123,13 @@ export class GameComponent implements OnInit {
   async saveGame() {
     try {
       const gameRef = this.getSingleDocRef("games", this.currentId);
-  
+
       // Rufen Sie die aktuellen Spielinformationen aus der Datenbank ab
       const docSnapshot = await getDoc(gameRef);
-      
+
       if (docSnapshot.exists()) {
         const currentGame = docSnapshot.data();
-  
+
         // Führen Sie die erforderlichen Aktualisierungen durch
         currentGame['currentplayer'] = this.game.currentPlayer;
         currentGame['player_images'] = this.game.player_images
@@ -128,7 +138,7 @@ export class GameComponent implements OnInit {
         currentGame['stack'] = this.game.stack;
         currentGame['pickCardAnimation'] = this.game.pickCardAnimation;
         currentGame['currentCard'] = this.game.currentCard;
-  
+
         // Aktualisieren Sie die Daten in der Datenbank
         await updateDoc(gameRef, currentGame);
         console.log(this.currentId, 'Game saved');
@@ -144,9 +154,10 @@ export class GameComponent implements OnInit {
   }
 
   takeCard() {
-    if (!this.game.pickCardAnimation && this.game.players.length > 0) {
-
-
+    if (this.game.stack.length == 0) {
+      this.gameOver = true;
+    }
+    else if (!this.game.pickCardAnimation && this.game.players.length > 0) {
       this.game.currentCard = this.game.stack.pop() ?? '';
       console.log(this.game.currentCard)
       this.game.pickCardAnimation = true;
@@ -173,7 +184,7 @@ export class GameComponent implements OnInit {
         this.saveGame()
       }
     });
-    
+
   }
 }
 

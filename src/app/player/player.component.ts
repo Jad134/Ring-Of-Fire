@@ -15,10 +15,10 @@ export class PlayerComponent implements OnInit {
   @Input() playerActive: boolean = false;
   constructor(){
     this.name = '';
-    this.image =''
+    this.image ='';
   } ;
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     
   }
 }
